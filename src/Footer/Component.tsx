@@ -7,7 +7,12 @@ import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 
 export async function Footer() {
-  const footerData = await getCachedGlobal('footer', 1)()
+  let footerData: Awaited<ReturnType<ReturnType<typeof getCachedGlobal>>> | null = null
+  try {
+    footerData = await getCachedGlobal('footer', 1)()
+  } catch {
+    // DB not yet initialised (first build) — render with empty nav
+  }
 
   const navItems = footerData?.navItems || []
 

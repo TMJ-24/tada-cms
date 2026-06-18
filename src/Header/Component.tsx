@@ -5,7 +5,12 @@ import React from 'react'
 import { getServerSideURL } from '@/utilities/getURL'
 
 export async function Header() {
-  const headerData = await getCachedGlobal('header', 1)()
+  let headerData: Awaited<ReturnType<ReturnType<typeof getCachedGlobal>>> | null = null
+  try {
+    headerData = await getCachedGlobal('header', 1)()
+  } catch {
+    // DB not yet initialised (first build) — render with empty nav
+  }
 
   // Resolve the current authenticated user from the session cookie
   let currentUser: { name?: string; email?: string; role?: string } | null = null
@@ -26,5 +31,5 @@ export async function Header() {
     // not authenticated — silently continue
   }
 
-  return <HeaderClient data={headerData} currentUser={currentUser} />
+  return <HeaderClient data={headerData as any} currentUser={currentUser} />
 }
