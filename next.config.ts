@@ -46,9 +46,6 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: true,
   redirects,
-  turbopack: {
-    root: path.resolve(dirname),
-  },
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })
