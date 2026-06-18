@@ -20,6 +20,26 @@
     font-weight: unset;
     font-size: unset;
   }
+
+  /* Thin scrollbar */
+  ::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(70% 0 0deg / 40%);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(50% 0 0deg / 60%);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(70% 0 0deg / 40%) transparent;
+  }
 }
 
 @plugin "@tailwindcss/typography";

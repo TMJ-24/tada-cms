@@ -72,6 +72,17 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    population: Population;
+    projects: Project;
+    initiatives: Initiative;
+    programs: Program;
+    events: Event;
+    members: Member;
+    gallery: Gallery;
+    documents: Document;
+    'meeting-minutes': MeetingMinute;
+    financials: Financial;
+    announcements: Announcement;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -94,6 +105,17 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    population: PopulationSelect<false> | PopulationSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    initiatives: InitiativesSelect<false> | InitiativesSelect<true>;
+    programs: ProgramsSelect<false> | ProgramsSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
+    members: MembersSelect<false> | MembersSelect<true>;
+    gallery: GallerySelect<false> | GallerySelect<true>;
+    documents: DocumentsSelect<false> | DocumentsSelect<true>;
+    'meeting-minutes': MeetingMinutesSelect<false> | MeetingMinutesSelect<true>;
+    financials: FinancialsSelect<false> | FinancialsSelect<true>;
+    announcements: AnnouncementsSelect<false> | AnnouncementsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -106,7 +128,7 @@ export interface Config {
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
   globals: {
@@ -156,7 +178,7 @@ export interface UserAuthOperations {
  * via the `definition` "pages".
  */
 export interface Page {
-  id: string;
+  id: number;
   title: string;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
@@ -183,11 +205,11 @@ export interface Page {
             reference?:
               | ({
                   relationTo: 'pages';
-                  value: string | Page;
+                  value: number | Page;
                 } | null)
               | ({
                   relationTo: 'posts';
-                  value: string | Post;
+                  value: number | Post;
                 } | null);
             url?: string | null;
             label: string;
@@ -199,7 +221,7 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
-    media?: (string | null) | Media;
+    media?: (number | null) | Media;
   };
   layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
   meta?: {
@@ -207,7 +229,7 @@ export interface Page {
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
@@ -225,9 +247,9 @@ export interface Page {
  * via the `definition` "posts".
  */
 export interface Post {
-  id: string;
+  id: number;
   title: string;
-  heroImage?: (string | null) | Media;
+  heroImage?: (number | null) | Media;
   content: {
     root: {
       type: string;
@@ -243,18 +265,18 @@ export interface Post {
     };
     [k: string]: unknown;
   };
-  relatedPosts?: (string | Post)[] | null;
-  categories?: (string | Category)[] | null;
+  relatedPosts?: (number | Post)[] | null;
+  categories?: (number | Category)[] | null;
   meta?: {
     title?: string | null;
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
-  authors?: (string | User)[] | null;
+  authors?: (number | User)[] | null;
   populatedAuthors?:
     | {
         id?: string | null;
@@ -275,7 +297,7 @@ export interface Post {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt?: string | null;
   caption?: {
     root: {
@@ -292,7 +314,7 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
-  folder?: (string | null) | FolderInterface;
+  folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -368,18 +390,18 @@ export interface Media {
  * via the `definition` "payload-folders".
  */
 export interface FolderInterface {
-  id: string;
+  id: number;
   name: string;
-  folder?: (string | null) | FolderInterface;
+  folder?: (number | null) | FolderInterface;
   documentsAndFolders?: {
     docs?: (
       | {
           relationTo?: 'payload-folders';
-          value: string | FolderInterface;
+          value: number | FolderInterface;
         }
       | {
           relationTo?: 'media';
-          value: string | Media;
+          value: number | Media;
         }
     )[];
     hasNextPage?: boolean;
@@ -394,17 +416,17 @@ export interface FolderInterface {
  * via the `definition` "categories".
  */
 export interface Category {
-  id: string;
+  id: number;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
-  parent?: (string | null) | Category;
+  parent?: (number | null) | Category;
   breadcrumbs?:
     | {
-        doc?: (string | null) | Category;
+        doc?: (number | null) | Category;
         url?: string | null;
         label?: string | null;
         id?: string | null;
@@ -418,8 +440,16 @@ export interface Category {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
-  name?: string | null;
+  id: number;
+  name: string;
+  /**
+   * Controls what this user can access in the dashboard.
+   */
+  role: 'super_admin' | 'executive' | 'village_rep' | 'member';
+  /**
+   * Required for Village Representatives — limits their data access to this village.
+   */
+  village?: ('Lelefiru' | 'Hamuhamu' | 'Kukipi' | 'Isapeape' | 'Uritai' | 'Mirivase' | 'Lalapipi' | 'Popo') | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -467,11 +497,11 @@ export interface CallToActionBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -517,11 +547,11 @@ export interface ContentBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -542,7 +572,7 @@ export interface ContentBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
-  media: string | Media;
+  media: number | Media;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -569,12 +599,12 @@ export interface ArchiveBlock {
   } | null;
   populateBy?: ('collection' | 'selection') | null;
   relationTo?: 'posts' | null;
-  categories?: (string | Category)[] | null;
+  categories?: (number | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
     | {
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
       }[]
     | null;
   id?: string | null;
@@ -586,7 +616,7 @@ export interface ArchiveBlock {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
-  form: string | Form;
+  form: number | Form;
   enableIntro?: boolean | null;
   introContent?: {
     root: {
@@ -612,7 +642,7 @@ export interface FormBlock {
  * via the `definition` "forms".
  */
 export interface Form {
-  id: string;
+  id: number;
   title: string;
   fields?:
     | (
@@ -782,11 +812,248 @@ export interface Form {
   createdAt: string;
 }
 /**
+ * Village population census data for all Toaripi communities.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "population".
+ */
+export interface Population {
+  id: number;
+  village: 'Lelefiru' | 'Hamuhamu' | 'Kukipi' | 'Isapeape' | 'Uritai' | 'Mirivase' | 'Lalapipi' | 'Popo';
+  /**
+   * Census year
+   */
+  year: number;
+  totalPopulation: number;
+  households?: number | null;
+  maleCount?: number | null;
+  femaleCount?: number | null;
+  childrenUnder15?: number | null;
+  youthCount?: number | null;
+  /**
+   * Any notes or observations about this census record.
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Community development projects across Toaripi villages.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: number;
+  title: string;
+  category:
+    | 'infrastructure'
+    | 'economic'
+    | 'health'
+    | 'education'
+    | 'energy'
+    | 'agriculture'
+    | 'social'
+    | 'environment';
+  status: 'planning' | 'in_progress' | 'on_hold' | 'completed' | 'cancelled';
+  /**
+   * Completion percentage (0–100)
+   */
+  progress?: number | null;
+  budget?: string | null;
+  lead?: string | null;
+  /**
+   * Villages this project serves.
+   */
+  villages?:
+    | ('all' | 'Lelefiru' | 'Hamuhamu' | 'Kukipi' | 'Isapeape' | 'Uritai' | 'Mirivase' | 'Lalapipi' | 'Popo')[]
+    | null;
+  startDate?: string | null;
+  targetDate?: string | null;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Community programs and social initiatives run by TADA.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "initiatives".
+ */
+export interface Initiative {
+  id: number;
+  name: string;
+  category: 'education' | 'culture' | 'health' | 'economic' | 'agriculture' | 'youth' | 'women' | 'sports';
+  status: 'active' | 'upcoming' | 'completed' | 'on_hold';
+  beneficiaries?: number | null;
+  villages?:
+    | ('all' | 'Lelefiru' | 'Hamuhamu' | 'Kukipi' | 'Isapeape' | 'Uritai' | 'Mirivase' | 'Lalapipi' | 'Popo')[]
+    | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Business and economic development programs for the Toaripi community.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs".
+ */
+export interface Program {
+  id: number;
+  name: string;
+  category: 'fisheries' | 'agriculture' | 'tourism' | 'trade' | 'finance' | 'skills' | 'technology' | 'other';
+  stage: 'concept' | 'planning' | 'design' | 'active' | 'registered' | 'scaling' | 'completed';
+  participants?: number | null;
+  targetParticipants?: number | null;
+  fundingSource?: string | null;
+  fundingAmount?: string | null;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  category: 'meeting' | 'cultural' | 'health' | 'education' | 'community' | 'business' | 'sports' | 'other';
+  status?: ('upcoming' | 'ongoing' | 'completed' | 'cancelled') | null;
+  date: string;
+  endDate?: string | null;
+  time?: string | null;
+  location?: string | null;
+  village?: ('Lelefiru' | 'Hamuhamu' | 'Kukipi' | 'Isapeape' | 'Uritai' | 'Mirivase' | 'Lalapipi' | 'Popo') | null;
+  description?: string | null;
+  organiser?: string | null;
+  image?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members".
+ */
+export interface Member {
+  id: number;
+  fullName: string;
+  email: string;
+  phone?: string | null;
+  village: 'Lelefiru' | 'Hamuhamu' | 'Kukipi' | 'Isapeape' | 'Uritai' | 'Mirivase' | 'Lalapipi' | 'Popo';
+  membershipType?: ('ordinary' | 'associate' | 'life' | 'honorary') | null;
+  status?: ('pending' | 'active' | 'inactive' | 'rejected') | null;
+  occupation?: string | null;
+  currentResidence?: string | null;
+  motivation?: string | null;
+  skills?: string | null;
+  memberSince?: string | null;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery".
+ */
+export interface Gallery {
+  id: number;
+  title: string;
+  image: number | Media;
+  category?: ('community' | 'cultural' | 'project' | 'health' | 'education' | 'village' | 'leadership') | null;
+  village?: ('Lelefiru' | 'Hamuhamu' | 'Kukipi' | 'Isapeape' | 'Uritai' | 'Mirivase' | 'Lalapipi' | 'Popo') | null;
+  year?: number | null;
+  caption?: string | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents".
+ */
+export interface Document {
+  id: number;
+  title: string;
+  category: 'governance' | 'annual_report' | 'financial' | 'minutes' | 'policy' | 'program' | 'other';
+  year?: number | null;
+  description?: string | null;
+  file: number | Media;
+  public?: boolean | null;
+  version?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "meeting-minutes".
+ */
+export interface MeetingMinute {
+  id: number;
+  title: string;
+  meetingType?: ('agm' | 'executive' | 'village_rep' | 'special' | 'subcommittee') | null;
+  date: string;
+  location?: string | null;
+  chair?: string | null;
+  secretary?: string | null;
+  attendees?: string | null;
+  apologies?: string | null;
+  agenda?: string | null;
+  resolutions?: string | null;
+  notes?: string | null;
+  attachment?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "financials".
+ */
+export interface Financial {
+  id: number;
+  title: string;
+  type: 'income' | 'expenditure';
+  category?:
+    | ('membership' | 'donations' | 'grants' | 'fundraising' | 'project' | 'admin' | 'programs' | 'salaries' | 'other')
+    | null;
+  amount: number;
+  date: string;
+  financialYear?: string | null;
+  reference?: string | null;
+  project?: string | null;
+  notes?: string | null;
+  attachment?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcements".
+ */
+export interface Announcement {
+  id: number;
+  title: string;
+  body: string;
+  priority?: ('normal' | 'important' | 'urgent') | null;
+  audience?: ('all' | 'executive' | 'village_rep') | null;
+  targetVillages?:
+    | ('Lelefiru' | 'Hamuhamu' | 'Kukipi' | 'Isapeape' | 'Uritai' | 'Mirivase' | 'Lalapipi' | 'Popo')[]
+    | null;
+  publishedAt: string;
+  expiresAt?: string | null;
+  pinned?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
-  id: string;
+  id: number;
   /**
    * You will need to rebuild the website when changing this field.
    */
@@ -796,11 +1063,11 @@ export interface Redirect {
     reference?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
         } | null);
     url?: string | null;
   };
@@ -812,8 +1079,8 @@ export interface Redirect {
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
-  id: string;
-  form: string | Form;
+  id: number;
+  form: number | Form;
   submissionData?:
     | {
         field: string;
@@ -831,18 +1098,18 @@ export interface FormSubmission {
  * via the `definition` "search".
  */
 export interface Search {
-  id: string;
+  id: number;
   title?: string | null;
   priority?: number | null;
   doc: {
     relationTo: 'posts';
-    value: string | Post;
+    value: number | Post;
   };
   slug?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
   };
   categories?:
     | {
@@ -860,7 +1127,7 @@ export interface Search {
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -877,7 +1144,7 @@ export interface PayloadKv {
  * via the `definition` "payload-jobs".
  */
 export interface PayloadJob {
-  id: string;
+  id: number;
   /**
    * Input data provided to the job
    */
@@ -969,52 +1236,96 @@ export interface PayloadJob {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'pages';
-        value: string | Page;
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
       } | null)
     | ({
         relationTo: 'categories';
-        value: string | Category;
+        value: number | Category;
       } | null)
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'population';
+        value: number | Population;
+      } | null)
+    | ({
+        relationTo: 'projects';
+        value: number | Project;
+      } | null)
+    | ({
+        relationTo: 'initiatives';
+        value: number | Initiative;
+      } | null)
+    | ({
+        relationTo: 'programs';
+        value: number | Program;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'members';
+        value: number | Member;
+      } | null)
+    | ({
+        relationTo: 'gallery';
+        value: number | Gallery;
+      } | null)
+    | ({
+        relationTo: 'documents';
+        value: number | Document;
+      } | null)
+    | ({
+        relationTo: 'meeting-minutes';
+        value: number | MeetingMinute;
+      } | null)
+    | ({
+        relationTo: 'financials';
+        value: number | Financial;
+      } | null)
+    | ({
+        relationTo: 'announcements';
+        value: number | Announcement;
       } | null)
     | ({
         relationTo: 'redirects';
-        value: string | Redirect;
+        value: number | Redirect;
       } | null)
     | ({
         relationTo: 'forms';
-        value: string | Form;
+        value: number | Form;
       } | null)
     | ({
         relationTo: 'form-submissions';
-        value: string | FormSubmission;
+        value: number | FormSubmission;
       } | null)
     | ({
         relationTo: 'search';
-        value: string | Search;
+        value: number | Search;
       } | null)
     | ({
         relationTo: 'payload-folders';
-        value: string | FolderInterface;
+        value: number | FolderInterface;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -1024,10 +1335,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -1047,7 +1358,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -1339,6 +1650,8 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  role?: T;
+  village?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1355,6 +1668,196 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "population_select".
+ */
+export interface PopulationSelect<T extends boolean = true> {
+  village?: T;
+  year?: T;
+  totalPopulation?: T;
+  households?: T;
+  maleCount?: T;
+  femaleCount?: T;
+  childrenUnder15?: T;
+  youthCount?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects_select".
+ */
+export interface ProjectsSelect<T extends boolean = true> {
+  title?: T;
+  category?: T;
+  status?: T;
+  progress?: T;
+  budget?: T;
+  lead?: T;
+  villages?: T;
+  startDate?: T;
+  targetDate?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "initiatives_select".
+ */
+export interface InitiativesSelect<T extends boolean = true> {
+  name?: T;
+  category?: T;
+  status?: T;
+  beneficiaries?: T;
+  villages?: T;
+  startDate?: T;
+  endDate?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs_select".
+ */
+export interface ProgramsSelect<T extends boolean = true> {
+  name?: T;
+  category?: T;
+  stage?: T;
+  participants?: T;
+  targetParticipants?: T;
+  fundingSource?: T;
+  fundingAmount?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  category?: T;
+  status?: T;
+  date?: T;
+  endDate?: T;
+  time?: T;
+  location?: T;
+  village?: T;
+  description?: T;
+  organiser?: T;
+  image?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members_select".
+ */
+export interface MembersSelect<T extends boolean = true> {
+  fullName?: T;
+  email?: T;
+  phone?: T;
+  village?: T;
+  membershipType?: T;
+  status?: T;
+  occupation?: T;
+  currentResidence?: T;
+  motivation?: T;
+  skills?: T;
+  memberSince?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery_select".
+ */
+export interface GallerySelect<T extends boolean = true> {
+  title?: T;
+  image?: T;
+  category?: T;
+  village?: T;
+  year?: T;
+  caption?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents_select".
+ */
+export interface DocumentsSelect<T extends boolean = true> {
+  title?: T;
+  category?: T;
+  year?: T;
+  description?: T;
+  file?: T;
+  public?: T;
+  version?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "meeting-minutes_select".
+ */
+export interface MeetingMinutesSelect<T extends boolean = true> {
+  title?: T;
+  meetingType?: T;
+  date?: T;
+  location?: T;
+  chair?: T;
+  secretary?: T;
+  attendees?: T;
+  apologies?: T;
+  agenda?: T;
+  resolutions?: T;
+  notes?: T;
+  attachment?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "financials_select".
+ */
+export interface FinancialsSelect<T extends boolean = true> {
+  title?: T;
+  type?: T;
+  category?: T;
+  amount?: T;
+  date?: T;
+  financialYear?: T;
+  reference?: T;
+  project?: T;
+  notes?: T;
+  attachment?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcements_select".
+ */
+export interface AnnouncementsSelect<T extends boolean = true> {
+  title?: T;
+  body?: T;
+  priority?: T;
+  audience?: T;
+  targetVillages?: T;
+  publishedAt?: T;
+  expiresAt?: T;
+  pinned?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1636,7 +2139,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  * via the `definition` "header".
  */
 export interface Header {
-  id: string;
+  id: number;
   navItems?:
     | {
         link: {
@@ -1645,11 +2148,11 @@ export interface Header {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -1665,7 +2168,7 @@ export interface Header {
  * via the `definition` "footer".
  */
 export interface Footer {
-  id: string;
+  id: number;
   navItems?:
     | {
         link: {
@@ -1674,11 +2177,11 @@ export interface Footer {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -1756,14 +2259,14 @@ export interface TaskSchedulePublish {
     doc?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
         } | null);
     global?: string | null;
-    user?: (string | null) | User;
+    user?: (number | null) | User;
   };
   output?: unknown;
 }

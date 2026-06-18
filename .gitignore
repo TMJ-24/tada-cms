@@ -1,5 +1,5 @@
 build
-dist / media
+dist
 node_modules
 .DS_Store
 .env
@@ -7,15 +7,22 @@ node_modules
 next-env.d.ts
 .vercel
 
+# SQLite database — lives on the server, never commit
+*.db
+*.db-shm
+*.db-wal
+
 # Payload default media upload directory
 public/media/
 
 public/robots.txt
 public/sitemap*.xml
 
+# Logs
+*.log
+.next/dev/logs/
 
 # Playwright
-node_modules/
 /test-results/
 /playwright-report/
 /blob-report/

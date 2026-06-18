@@ -9,6 +9,17 @@ import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
+import { Population } from './collections/Population'
+import { Projects } from './collections/Projects'
+import { Initiatives } from './collections/Initiatives'
+import { Programs } from './collections/Programs'
+import { Events } from './collections/Events'
+import { Members } from './collections/Members'
+import { Gallery } from './collections/Gallery'
+import { Documents } from './collections/Documents'
+import { MeetingMinutes } from './collections/MeetingMinutes'
+import { Financials } from './collections/Financials'
+import { Announcements } from './collections/Announcements'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -62,7 +73,11 @@ export default buildConfig({
       url: process.env.DATABASE_URL || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [
+    Pages, Posts, Media, Categories, Users,
+    Population, Projects, Initiatives, Programs,
+    Events, Members, Gallery, Documents, MeetingMinutes, Financials, Announcements,
+  ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins,
