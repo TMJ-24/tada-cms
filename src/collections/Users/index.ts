@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, AccessResult } from 'payload'
 
 import { isAdmin } from '../../access/isAdmin'
 import { isAdminOrExecutive } from '../../access/isAdminOrExecutive'
@@ -13,18 +13,17 @@ export const Users: CollectionConfig = {
     // also needed for the seed endpoint.
     create: () => true,
     delete: isAdmin,
-    read: ({ req: { user } }) => {
+    read: ({ req: { user } }): AccessResult => {
       if (!user) return false
       const u = user as any
       if (['super_admin', 'executive'].includes(u.role)) return true
-      // village_rep and member can only read themselves
       return { id: { equals: u.id } }
     },
-    update: ({ req: { user } }) => {
+    update: ({ req: { user } }): AccessResult => {
       if (!user) return false
       const u = user as any
       if (u.role === 'super_admin') return true
-      if (u.role === 'executive') return { role: { not_equals: 'super_admin' } }
+      if (u.role === 'executive') return { role: { not_equals: 'super_admin' } } as any
       return { id: { equals: u.id } }
     },
   },
