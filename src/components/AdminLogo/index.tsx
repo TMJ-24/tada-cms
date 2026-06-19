@@ -1,63 +1,22 @@
 'use client'
 import React from 'react'
+import { usePathname } from 'next/navigation'
 
-export const AdminLogo: React.FC = () => {
+const AdminLogo: React.FC = () => {
+  const pathname = usePathname()
+  if (pathname === '/admin') return null
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        padding: '2px 0',
-      }}
-    >
-      <div
-        style={{
-          width: 32,
-          height: 32,
-          borderRadius: '50%',
-          background: 'linear-gradient(135deg, #1D4ED8 0%, #1e40af 100%)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-        }}
-      >
-        <span
-          style={{
-            color: '#fff',
-            fontSize: 9,
-            fontWeight: 900,
-            letterSpacing: 1,
-            fontFamily: 'sans-serif',
-          }}
-        >
-          TADA
-        </span>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div style={{
+        width: 28, height: 28, borderRadius: '50%',
+        background: 'linear-gradient(135deg, #1D4ED8 0%, #1e40af 100%)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+      }}>
+        <span style={{ color: '#fff', fontSize: 7, fontWeight: 900, letterSpacing: 1 }}>TADA</span>
       </div>
-      <div style={{ lineHeight: 1.15 }}>
-        <div
-          style={{
-            fontSize: 14,
-            fontWeight: 800,
-            letterSpacing: 2,
-            textTransform: 'uppercase',
-            color: 'var(--theme-text)',
-            fontFamily: 'sans-serif',
-          }}
-        >
-          TADA CMS
-        </div>
-        <div
-          style={{
-            fontSize: 9,
-            color: 'var(--theme-elevation-500)',
-            letterSpacing: 0.5,
-            fontFamily: 'sans-serif',
-          }}
-        >
-          Toaripi Atutemori Dev. Assoc.
-        </div>
+      <div style={{ lineHeight: 1.2 }}>
+        <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--theme-text)' }}>TADA CMS</div>
+        <div style={{ fontSize: 8, color: 'var(--theme-elevation-500)' }}>Gulf Province, PNG</div>
       </div>
     </div>
   )

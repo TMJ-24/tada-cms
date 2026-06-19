@@ -11,7 +11,7 @@ export async function Footer() {
   try {
     footerData = await getCachedGlobal('footer', 1)()
   } catch {
-    // DB not yet initialised (first build) — render with empty nav
+    // DB not yet initialised
   }
 
   const navItems = footerData?.navItems || []
@@ -52,9 +52,9 @@ export async function Footer() {
           </h3>
           <nav className="flex flex-col gap-3">
             {navItems.length > 0
-              ? navItems.map(({ link }, i) => {
-                  return <CMSLink className="text-white/70 hover:text-white text-sm" key={i} {...link} />
-                })
+              ? navItems.map(({ link }, i) => (
+                  <CMSLink className="text-white/70 hover:text-white text-sm" key={i} {...link} />
+                ))
               : defaultFooterLinks.map(({ label, href }) => (
                   <Link
                     key={href}
@@ -67,7 +67,7 @@ export async function Footer() {
           </nav>
         </div>
 
-        {/* Contact snippet */}
+        {/* Contact */}
         <div>
           <h3 className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-4">
             Contact
@@ -88,9 +88,19 @@ export async function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="container py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <p className="text-xs text-white/40">
-            © {year} Toaripi Atutemori Development Association. All rights reserved.
-          </p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+            <p className="text-xs text-white/40">
+              &copy; {year} Toaripi Atutemori Development Association. All rights reserved.
+            </p>
+            <div className="flex gap-4">
+              <Link href="/privacy" className="text-xs text-white/40 hover:text-white/70 transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="text-xs text-white/40 hover:text-white/70 transition-colors">
+                Terms of Service
+              </Link>
+            </div>
+          </div>
           <ThemeSelector />
         </div>
       </div>

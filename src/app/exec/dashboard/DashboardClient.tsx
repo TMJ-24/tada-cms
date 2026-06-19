@@ -8,6 +8,7 @@ import {
   Shield, TrendingDown, TrendingUp, Users,
 } from 'lucide-react'
 import { cn } from '@/utilities/ui'
+import { logoutAction } from '../login/actions'
 
 type Tab = 'overview' | 'population' | 'projects' | 'initiatives' | 'programs' | 'members' | 'minutes' | 'financials' | 'announcements'
 
@@ -155,7 +156,7 @@ export function DashboardClient({
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-primary-foreground/60 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-colors">
             <Home size={14} /> Back to Website
           </Link>
-          <form action="/api/users/logout" method="POST">
+          <form action={logoutAction}>
             <button type="submit"
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-primary-foreground/60 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-colors">
               <LogOut size={14} /> Sign Out

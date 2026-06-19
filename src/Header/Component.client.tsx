@@ -39,15 +39,20 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, currentUser })
   const [theme, setTheme] = useState<string | null>(null)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
   const pathname = usePathname()
   const router = useRouter()
   const userMenuRef = useRef<HTMLDivElement>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setHeaderTheme(null)
     setUserMenuOpen(false)
     setMobileOpen(false)
+    setSearchOpen(false)
+    setSearchQuery('')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
@@ -56,13 +61,28 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, currentUser })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headerTheme])
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [mobileOpen])
 
-  // Close user dropdown when clicking outside
+  useEffect(() => {
+    if (searchOpen) {
+      setTimeout(() => searchInputRef.current?.focus(), 50)
+    }
+  }, [searchOpen])
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setSearchOpen(false)
+        setUserMenuOpen(false)
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
+
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
@@ -72,6 +92,16 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, currentUser })
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
+
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault()
+    const q = searchQuery.trim()
+    if (q) {
+      router.push(`/search?q=${encodeURIComponent(q)}`)
+      setSearchOpen(false)
+      setSearchQuery('')
+    }
+  }
 
   async function handleSignOut() {
     await fetch('/api/users/logout', { method: 'POST' })
@@ -92,27 +122,27 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, currentUser })
             <Logo loading="eager" priority="high" />
           </Link>
 
-          {/* Desktop nav — absolutely centred */}
+          {/* Desktop nav — centred */}
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2">
             <HeaderNav data={data} />
           </div>
 
-          {/* Right side */}
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Search (desktop only) */}
-            <Link
-              href="/search"
-              aria-label="Search"
-              className="hidden md:flex p-2 rounded-lg text-foreground/70 hover:text-foreground hover:bg-accent transition-colors"
+          {/* Right actions */}
+          <div className="flex items-center gap-1 shrink-0">
+            {/* Search toggle */}
+            <button
+              onClick={() => { setSearchOpen(o => !o); setMobileOpen(false) }}
+              aria-label={searchOpen ? 'Close search' : 'Open search'}
+              className="p-2 rounded-lg text-foreground/70 hover:text-foreground hover:bg-accent transition-colors"
             >
-              <Search size={18} />
-            </Link>
+              {searchOpen ? <X size={18} /> : <Search size={18} />}
+            </button>
 
             {/* Desktop: user menu or login */}
             {currentUser ? (
               <div className="relative hidden md:block" ref={userMenuRef}>
                 <button
-                  onClick={() => setUserMenuOpen((o) => !o)}
+                  onClick={() => setUserMenuOpen(o => !o)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border hover:bg-accent transition-colors text-sm"
                 >
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
@@ -150,13 +180,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, currentUser })
                 href="/exec/login"
                 className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
               >
-                <Lock size={14} /> Executive Login
+                <Lock size={14} /> Login
               </Link>
             )}
 
             {/* Mobile hamburger */}
             <button
-              onClick={() => setMobileOpen((o) => !o)}
+              onClick={() => { setMobileOpen(o => !o); setSearchOpen(false) }}
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               className="md:hidden p-2 rounded-lg text-foreground/70 hover:text-foreground hover:bg-accent transition-colors"
             >
@@ -164,18 +194,43 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, currentUser })
             </button>
           </div>
         </div>
+
+        {/* Search dropdown panel */}
+        {searchOpen && (
+          <div className="border-t border-border bg-background/95 backdrop-blur-sm px-4 py-3">
+            <form onSubmit={handleSearch} className="container flex items-center gap-3">
+              <div className="flex-1 relative">
+                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  ref={searchInputRef}
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  placeholder="Search TADA — news, programs, events…"
+                  className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-border bg-card text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+              </div>
+              <button
+                type="submit"
+                className="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
+              >
+                Search
+              </button>
+              <button
+                type="button"
+                onClick={() => setSearchOpen(false)}
+                className="p-2.5 rounded-lg border border-border text-muted-foreground hover:bg-accent transition-colors md:hidden"
+              >
+                <X size={16} />
+              </button>
+            </form>
+          </div>
+        )}
       </header>
 
       {/* Mobile drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-20 md:hidden" aria-modal="true">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setMobileOpen(false)}
-          />
-
-          {/* Drawer panel */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
           <div className="absolute top-[65px] left-0 right-0 bg-background border-b border-border shadow-xl overflow-y-auto max-h-[calc(100vh-65px)]">
             <nav className="container py-4 flex flex-col gap-1">
               {mobileNavItems.map(({ label, href }) => (
@@ -200,10 +255,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, currentUser })
                       <p className="text-sm font-semibold">{currentUser.name}</p>
                       <p className="text-xs text-muted-foreground">{currentUser.email}</p>
                     </div>
-                    <Link
-                      href="/exec/dashboard"
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium hover:bg-accent transition-colors"
-                    >
+                    <Link href="/exec/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium hover:bg-accent transition-colors">
                       <LayoutDashboard size={18} /> Dashboard
                     </Link>
                     <button
@@ -218,17 +270,10 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, currentUser })
                     href="/exec/login"
                     className="flex items-center gap-3 px-4 py-3 rounded-lg text-base font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
                   >
-                    <Lock size={18} /> Executive Login
+                    <Lock size={18} /> Login
                   </Link>
                 )}
               </div>
-
-              <Link
-                href="/search"
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-foreground/80 hover:text-foreground hover:bg-accent transition-colors"
-              >
-                <Search size={18} /> Search
-              </Link>
             </nav>
           </div>
         </div>

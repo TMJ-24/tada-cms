@@ -1,5 +1,4 @@
 'use client'
-
 import { useEffect, useState } from 'react'
 import { ArrowUp } from 'lucide-react'
 
@@ -7,26 +6,40 @@ export function BackToTop() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    function onScroll() {
-      setVisible(window.scrollY > 400)
-    }
+    const onScroll = () => setVisible(window.scrollY > 300)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
   return (
     <button
-      onClick={scrollToTop}
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       aria-label="Back to top"
-      className={`fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center transition-all duration-300 hover:opacity-90 hover:-translate-y-0.5 ${
-        visible ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
-      }`}
+      style={{
+        position: 'fixed',
+        bottom: 24,
+        right: 24,
+        zIndex: 50,
+        width: 44,
+        height: 44,
+        borderRadius: '50%',
+        background: '#1D4ED8',
+        color: '#fff',
+        border: 'none',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 4px 16px rgba(29,78,216,0.35)',
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(16px)',
+        pointerEvents: visible ? 'auto' : 'none',
+        transition: 'opacity 0.3s, transform 0.3s',
+      }}
     >
-      <ArrowUp size={18} />
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="18 15 12 9 6 15"/>
+      </svg>
     </button>
   )
 }

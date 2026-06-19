@@ -33,6 +33,7 @@ export default buildConfig({
   admin: {
     components: {
       beforeLogin: ['@/components/BeforeLogin'],
+      afterLogin: ['@/components/AfterLogin'],
       beforeDashboard: ['@/components/BeforeDashboard'],
       graphics: {
         Logo: '@/components/AdminLogo',

@@ -48,3 +48,9 @@ export async function loginAction(formData: FormData) {
 
   redirect('/exec/dashboard')
 }
+
+export async function logoutAction() {
+  const cookieStore = await cookies()
+  cookieStore.delete('tada-exec-token')
+  redirect('/exec/login')
+}
