@@ -22,6 +22,7 @@ import { Financials } from './collections/Financials'
 import { Announcements } from './collections/Announcements'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
+import { SiteSettings } from './globals/SiteSettings'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
@@ -85,7 +86,7 @@ export default buildConfig({
     Events, Members, Gallery, Documents, MeetingMinutes, Financials, Announcements,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
+  globals: [Header, Footer, SiteSettings],
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

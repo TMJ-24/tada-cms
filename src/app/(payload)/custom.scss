@@ -1,3 +1,4 @@
+// ─── Geist Sans font — matches the public frontend typeface ──────────────────
 @layer payload-override {
   :root,
   body,
@@ -8,6 +9,7 @@
   }
 }
 
+// ─── Login page — gift card layout ───────────────────────────────────────────
 @layer payload-override {
   .template-minimal {
     min-height: 100vh;
@@ -24,13 +26,41 @@
     padding: 0 !important;
   }
 
-  /* Belt-and-suspenders: hide logo brand via CSS in case JS hasn't fired yet */
   .login__brand {
     display: none !important;
   }
 
-  /* Pad the form fields */
   .login__form {
     padding: 0.25rem 2rem 2rem !important;
   }
+}
+
+// ─── Sidebar nav icons ────────────────────────────────────────────────────────
+@layer payload-override {
+  // Collections
+  a[href$="/collections/pages"]::before       { content: "📄 "; }
+  a[href$="/collections/posts"]::before       { content: "✍️ "; }
+  a[href$="/collections/media"]::before       { content: "🖼️ "; }
+  a[href$="/collections/categories"]::before  { content: "🏷️ "; }
+  a[href$="/collections/users"]::before       { content: "👥 "; }
+  a[href$="/collections/population"]::before  { content: "🏘️ "; }
+  a[href$="/collections/projects"]::before    { content: "🔧 "; }
+  a[href$="/collections/initiatives"]::before { content: "🎯 "; }
+  a[href$="/collections/programs"]::before    { content: "📋 "; }
+  a[href$="/collections/events"]::before      { content: "📅 "; }
+  a[href$="/collections/members"]::before     { content: "👤 "; }
+  a[href$="/collections/gallery"]::before     { content: "🖼️ "; }
+  a[href$="/collections/documents"]::before   { content: "📁 "; }
+  a[href$="/collections/meeting-minutes"]::before { content: "📝 "; }
+  a[href$="/collections/financials"]::before  { content: "💰 "; }
+  a[href$="/collections/announcements"]::before { content: "📢 "; }
+  a[href$="/collections/redirects"]::before   { content: "↪️ "; }
+  a[href$="/collections/forms"]::before       { content: "📬 "; }
+  a[href$="/collections/form-submissions"]::before { content: "📥 "; }
+  a[href$="/collections/search"]::before      { content: "🔍 "; }
+
+  // Globals
+  a[href$="/globals/header"]::before       { content: "🗂️ "; }
+  a[href$="/globals/footer"]::before       { content: "📌 "; }
+  a[href$="/globals/site-settings"]::before { content: "⚙️ "; }
 }

@@ -30,7 +30,11 @@ const slides = [
   },
 ]
 
-export function HeroSlider() {
+type Props = {
+  motto?: string
+}
+
+export function HeroSlider({ motto = 'Look Back, Give Back' }: Props) {
   const [current, setCurrent] = useState(0)
   const [paused, setPaused] = useState(false)
 
@@ -61,7 +65,7 @@ export function HeroSlider() {
         />
       ))}
 
-      {/* Gradient overlay — dark at top for text, darker at bottom for dots */}
+      {/* Gradient overlay */}
       <div
         className="absolute inset-0"
         style={{
@@ -73,6 +77,14 @@ export function HeroSlider() {
       {/* Text content */}
       <div className="container relative py-28 md:py-44 pb-24" style={{ zIndex: 2 }}>
         <div className="max-w-3xl">
+          {/* Motto ribbon */}
+          <p
+            className="text-white/60 text-sm font-medium italic mb-4"
+            style={{ letterSpacing: '0.02em' }}
+          >
+            &ldquo;{motto}&rdquo;
+          </p>
+
           <span className="inline-flex items-center px-3 py-1 rounded-full border border-white/40 text-xs font-semibold uppercase tracking-widest opacity-80 mb-5">
             {slides[current].tag}
           </span>
@@ -99,7 +111,7 @@ export function HeroSlider() {
         </div>
       </div>
 
-      {/* Dots — absolute bottom centre */}
+      {/* Dots */}
       <div
         className="absolute bottom-8 left-0 right-0 flex justify-center gap-2.5"
         style={{ zIndex: 3 }}

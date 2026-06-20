@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight, BookOpen, Briefcase, Heart, MapPin, TrendingUp, Users } from 'lucide-react'
 import { HeroSlider } from '@/components/HeroSlider'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 
 export const metadata: Metadata = {
   title: 'TADA — Toaripi Atutemori Development Association',
@@ -20,18 +22,30 @@ const pillars = [
   { title: 'Cultural Preservation', desc: 'Celebrating and safeguarding Toaripi identity, language, and traditions for generations to come.', icon: MapPin },
 ]
 
-const stats = [
-  { value: '8', label: 'Villages Served' },
-  { value: '1,813', label: 'Community Members' },
-  { value: '12+', label: 'Active Projects' },
-  { value: 'Gulf', label: 'Province, PNG' },
-]
+export default async function HomePage() {
+  let motto = 'Look Back, Give Back'
+  let stats = [
+    { value: '8', label: 'Villages Served' },
+    { value: '1,813', label: 'Community Members' },
+    { value: '12+', label: 'Active Projects' },
+    { value: 'Gulf', label: 'Province, PNG' },
+  ]
 
-export default function HomePage() {
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const s = (await payload.findGlobal({ slug: 'site-settings' as any })) as any
+    if (s?.motto) motto = s.motto
+    if (s?.villageCount) stats[0].value = s.villageCount
+    if (s?.memberCount) stats[1].value = s.memberCount
+    if (s?.activeProjectCount) stats[2].value = s.activeProjectCount
+  } catch {
+    // DB not yet initialised — use defaults above
+  }
+
   return (
     <main>
       {/* Hero Slider */}
-      <HeroSlider />
+      <HeroSlider motto={motto} />
 
       {/* Villages strip */}
       <section className="bg-card border-b border-border py-10">
