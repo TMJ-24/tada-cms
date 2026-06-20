@@ -9,6 +9,28 @@
   }
 }
 
+// ─── Thin scrollbar — 2px to match the public website ────────────────────────
+@layer payload-override {
+  ::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--theme-elevation-200, #e5e7eb);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-elevation-400, #9ca3af);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--theme-elevation-200, #e5e7eb) transparent;
+  }
+}
+
 // ─── Login page — gift card layout ───────────────────────────────────────────
 @layer payload-override {
   .template-minimal {
@@ -33,34 +55,4 @@
   .login__form {
     padding: 0.25rem 2rem 2rem !important;
   }
-}
-
-// ─── Sidebar nav icons ────────────────────────────────────────────────────────
-@layer payload-override {
-  // Collections
-  a[href$="/collections/pages"]::before       { content: "📄 "; }
-  a[href$="/collections/posts"]::before       { content: "✍️ "; }
-  a[href$="/collections/media"]::before       { content: "🖼️ "; }
-  a[href$="/collections/categories"]::before  { content: "🏷️ "; }
-  a[href$="/collections/users"]::before       { content: "👥 "; }
-  a[href$="/collections/population"]::before  { content: "🏘️ "; }
-  a[href$="/collections/projects"]::before    { content: "🔧 "; }
-  a[href$="/collections/initiatives"]::before { content: "🎯 "; }
-  a[href$="/collections/programs"]::before    { content: "📋 "; }
-  a[href$="/collections/events"]::before      { content: "📅 "; }
-  a[href$="/collections/members"]::before     { content: "👤 "; }
-  a[href$="/collections/gallery"]::before     { content: "🖼️ "; }
-  a[href$="/collections/documents"]::before   { content: "📁 "; }
-  a[href$="/collections/meeting-minutes"]::before { content: "📝 "; }
-  a[href$="/collections/financials"]::before  { content: "💰 "; }
-  a[href$="/collections/announcements"]::before { content: "📢 "; }
-  a[href$="/collections/redirects"]::before   { content: "↪️ "; }
-  a[href$="/collections/forms"]::before       { content: "📬 "; }
-  a[href$="/collections/form-submissions"]::before { content: "📥 "; }
-  a[href$="/collections/search"]::before      { content: "🔍 "; }
-
-  // Globals
-  a[href$="/globals/header"]::before       { content: "🗂️ "; }
-  a[href$="/globals/footer"]::before       { content: "📌 "; }
-  a[href$="/globals/site-settings"]::before { content: "⚙️ "; }
 }
