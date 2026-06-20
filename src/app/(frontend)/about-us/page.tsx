@@ -76,6 +76,16 @@ export default function AboutUsPage() {
       {/* Mission & Vision */}
       <section className="bg-card border-y border-border py-20 mb-20">
         <div className="container">
+          {/* Motto */}
+          <div className="text-center mb-14">
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Our Guiding Motto</p>
+            <h2 className="text-3xl md:text-4xl font-bold italic">&ldquo;Look Back, Give Back&rdquo;</h2>
+            <p className="text-muted-foreground mt-3 max-w-md mx-auto text-sm leading-relaxed">
+              We honour the sacrifices of those who came before us, and invest in the future of those who come after.
+            </p>
+            <div className="mt-10 border-t border-border" />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
