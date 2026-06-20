@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 
 const AdminLogo: React.FC = () => {
   const pathname = usePathname()
-  if (pathname === '/admin') return null
+  if (pathname === '/admin' || pathname === '/admin/login') return null
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
       <div style={{

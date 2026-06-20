@@ -1,0 +1,36 @@
+@layer payload-override {
+  :root,
+  body,
+  *,
+  *::before,
+  *::after {
+    font-family: var(--font-geist-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, 'Helvetica Neue', Arial, sans-serif) !important;
+  }
+}
+
+@layer payload-override {
+  .template-minimal {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--theme-elevation-50, #f4f6fb);
+  }
+
+  .template-minimal__wrap {
+    width: 100%;
+    max-width: 440px;
+    padding: 0 !important;
+  }
+
+  /* Belt-and-suspenders: hide logo brand via CSS in case JS hasn't fired yet */
+  .login__brand {
+    display: none !important;
+  }
+
+  /* Pad the form fields */
+  .login__form {
+    padding: 0.25rem 2rem 2rem !important;
+  }
+}
