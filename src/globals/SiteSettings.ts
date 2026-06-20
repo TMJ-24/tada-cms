@@ -10,6 +10,16 @@ export const SiteSettings: GlobalConfig = {
   },
   fields: [
     {
+      name: 'maintenanceMode',
+      type: 'checkbox',
+      label: 'Maintenance Mode',
+      defaultValue: false,
+      admin: {
+        description: 'When enabled, visitors see a maintenance page instead of the site.',
+        position: 'sidebar',
+      },
+    },
+    {
       type: 'collapsible',
       label: 'Organisation Identity',
       fields: [
